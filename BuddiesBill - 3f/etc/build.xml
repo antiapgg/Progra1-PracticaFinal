@@ -1,0 +1,69 @@
+<project name="BuddiesBill" basedir=".." default="todo">
+    <property name="src" value="src"/>
+    <property name="test" value="test"/>
+    <property name="jUnit" value="lib/junit-4.8.2.jar"/>
+    <property name="log4j" value="lib/log4j-api-2.5.jar"/>
+    <property name="log4jCore" value="lib/log4j-core-2.5.jar"/>
+    <property name="classes" value="classes/"/>
+    <property name="doc" value="doc/"/>
+    <property name="log" value="log/"/>
+    <property name="config" value="etc/"/>
+
+    <property name="paquetes" value="es.unileon.prg1.buddiesBill"/>
+    <property name="titulo" value="Tests class BuddiesBill"/>
+
+    <target name="clean">
+      <delete dir="${classes}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+      <mkdir dir="${classes}"/>
+      <javac srcdir="${src}" destdir="${classes}" classpath="${jUnit};${log4j};${log4jCore}"
+		includeantruntime="false"/>
+      <echo message="Compilation...done"/>
+    </target>
+
+     <target name="doc" depends="compile">
+      <javadoc sourcepath="${src}" destdir="${doc}" author="true" version="true"
+      classpath="${jUnit};${log4j};${log4jCore}" additionalparam="-J-Dfile.encoding=${file.encoding} -Xdoclint:none"/>
+      <echo message="Documentation...done"/>
+    </target>
+
+    <target name="compileTests" depends="compile">
+      <mkdir dir="${classes}"/>
+      <javac srcdir="${test}" destdir="${classes}" classpath="${jUnit};${log4j};${log4jCore}"
+		includeantruntime="false"/>
+      <echo message="Test compilation...done"/>
+    </target>
+
+    <target name="test" depends="compileTests">
+		<mkdir dir="${log}"/>
+		<java classname="org.junit.runner.JUnitCore">
+			<classpath>
+				<pathelement path="${classes}"/>
+				<pathelement path="${jUnit}"/>
+				<pathelement path="${log4j}"/>
+				<pathelement path="${log4jCore}"/>
+	      			<pathelement location="${config}" />
+			</classpath>
+			<arg value="es.unileon.prg1.buddiesBill.AllTests"/>
+		</java>
+    </target>
+
+    <target name="run" depends="compile">
+      <java classname="es.unileon.prg1.buddiesBill.BuddiesBill">
+         <arg value="Weekend" />
+         <arg value="2" />
+         <arg value="4" />
+         <classpath>
+              <pathelement path="${classes}"/>
+	      <pathelement path="${log4j}"/>
+	      <pathelement path="${log4jCore}"/>
+	      <pathelement location="${config}/" />
+         </classpath>
+      </java>
+    </target>
+
+    <target name="todo" depends="test,doc,run"/>
+
+</project>
